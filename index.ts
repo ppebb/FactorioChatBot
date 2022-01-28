@@ -138,7 +138,7 @@ async function updateCheck() {
 			return;
 		}
 	});
-	PythonShell.run('update_factorio.py', {args:['-d', '-a', config.factorioPath]}, function (err, results: string[]) {
+	PythonShell.run('update_factorio.py', {args:['-d', '-a', config.factorioPath]}, function (err, results?: string[]) {
 		if (results == null) {
 			console.log('Error while checking for updates for the Factorio binary. Ensure the provided path in the config file is set correctly.');
 			return;
@@ -164,7 +164,7 @@ async function modUpdateCheck() {
         }
     });
 
-    PythonShell.run('mod_updater.py', {args:['-s', config.factorioSettingsPath, '-m', config.factorioModsPath, '--fact-path', config.factorioPath, '--list'], }, function (err, results: string[]) {
+    PythonShell.run('mod_updater.py', {args:['-s', config.factorioSettingsPath, '-m', config.factorioModsPath, '--fact-path', config.factorioPath, '--list'], }, function (err, results?: string[]) {
         if (results == null) {
             console.log("Error while checking for mod updates.");
             return;
@@ -189,7 +189,7 @@ bot.on("ready", () => {
 	//connect to rcon
 	RconConnect();
 
-	console.log(`Connected to Discord! Logged in as: ${bot.user.username} - (${bot.user.id})`);
+	console.log(`Connected to Discord! Logged in as: ${bot.user?.username} - (${bot.user?.id})`);
 	(bot.channels.cache.get(config.chatChannel) as Discord.TextChannel).send("[Chat System]: " + (config.startupMessage.enabled ? config.startupMessage.message : "Online!"));
 
 	clearLogFile();
@@ -235,7 +235,7 @@ bot.on("ready", () => {
 			// send command to the server
 			rcon.send('/' + comm);
 			// send to the channel showing someone sent a command to the server
-			if (!interaction.memberPermissions.any('ADMINISTRATOR')) {
+			if (!interaction.memberPermissions?.any('ADMINISTRATOR')) {
 				return interaction.reply("You do not have the required permissions to run this command.");
 			}
 			else if (!config.adminsCanRunCommands) {
@@ -258,7 +258,7 @@ bot.on("ready", () => {
 	});
 
 	rest.put(
-		Routes.applicationGuildCommands(bot.user.id, guildID),
+		Routes.applicationGuildCommands(bot.user?.id == undefined ? "" : bot.user.id, guildID),
 		{ body: commands2 }
 	);
 });
@@ -284,18 +284,18 @@ bot.on("messageCreate", async (message) => {
 		// send to the server
 		if (message.content.length > 0) {
 			if (config.cleanMessages == true) {
-				rcon.send(`/silent-command game.print("[color=#7289DA][Discord] ${message.member.nickname ?? message.author.username}: ${message.content.replaceAll('"', '\\"').replaceAll("'", "\\'")} [/color]${message.attachments?.size > 0 ? ('\n[' + message.attachments.size + ' attachment' + (message.attachments.size != 1 ? 's' : '')) + ']' : ''}")`);
+				rcon.send(`/silent-command game.print("[color=#7289DA][Discord] ${message.member?.nickname ?? message.author.username}: ${message.content.replaceAll('"', '\\"').replaceAll("'", "\\'")} [/color]${message.attachments?.size > 0 ? ('\n[' + message.attachments.size + ' attachment' + (message.attachments.size != 1 ? 's' : '')) + ']' : ''}")`);
 			}
 			else {
-				rcon.send(`[color=#7289DA][Discord] ${message.member.nickname ?? message.author.username}: ${message.content.replaceAll('"', '\\"').replaceAll("'", "\\'")}[/color]${message.attachments?.size > 0 ? ('\n[' + message.attachments.size + ' attachment' + (message.attachments.size != 1 ? 's' : '')) + ']' : ''}`);
+				rcon.send(`[color=#7289DA][Discord] ${message.member?.nickname ?? message.author.username}: ${message.content.replaceAll('"', '\\"').replaceAll("'", "\\'")}[/color]${message.attachments?.size > 0 ? ('\n[' + message.attachments.size + ' attachment' + (message.attachments.size != 1 ? 's' : '')) + ']' : ''}`);
 			}
 		}
 		else {
 			if (config.cleanMessages == true) {
-				rcon.send(`/silent-command game.print("[color=#7289DA][Discord] ${message.member.nickname ?? message.author.username}: [/color]${message.attachments?.size > 0 ? ('[' + message.attachments.size + ' attachment' + (message.attachments.size != 1 ? 's' : '')) + ']' : ''}")`);
+				rcon.send(`/silent-command game.print("[color=#7289DA][Discord] ${message.member?.nickname ?? message.author.username}: [/color]${message.attachments?.size > 0 ? ('[' + message.attachments.size + ' attachment' + (message.attachments.size != 1 ? 's' : '')) + ']' : ''}")`);
 			}
 			else {
-				rcon.send(`[color=#7289DA][Discord] ${message.member.nickname ?? message.author.username}: [/color]${message.attachments?.size > 0 ? ('[' + message.attachments.size + ' attachment' + (message.attachments.size != 1 ? 's' : '')) + ']' : ''}`);
+				rcon.send(`[color=#7289DA][Discord] ${message.member?.nickname ?? message.author.username}: [/color]${message.attachments?.size > 0 ? ('[' + message.attachments.size + ' attachment' + (message.attachments.size != 1 ? 's' : '')) + ']' : ''}`);
 			}
 		}
 	}
