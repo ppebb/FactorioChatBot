@@ -32,3 +32,4 @@ config.json
 factorio-bot-js.*
 update_factorio.py
 mod_updater.py
+index.js
