@@ -8,7 +8,8 @@ import { PythonShell } from "python-shell";
 
 import { Rcon } from "rcon-client";
 
-import config from "./config.json";
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const config: Config = require("./config.json");
 
 const rest = new REST({ version: "9" }).setToken(config.token);
 
@@ -22,46 +23,33 @@ interface Config {
     logFile: string;
 
     chatChannel: string;
-
     cleanMessages: boolean;
-
     adminsCanRunCommands: boolean;
-
     sendServerMessages: boolean;
+    sendGPSMessages: boolean;
 
     logLines: boolean;
 
     startupMessage: {
-
         enabled: boolean;
-
         message: string;
     }
 
     factorioPath: string;
-
     autoCheckUpdates: boolean;
-
     userToNotify: string;
-
     checkTime: number;
-
     silentCheck: boolean;
 
     RconIP: string;
-
     RconPort: number;
-
     RconPassword: string;
-
     RconTimeout: number;
 
     token: string;
 
     autoCheckModUpdates: boolean;
-
     factorioSettingsPath: string;
-
     factorioModsPath: string;
 }
 
@@ -358,6 +346,9 @@ function parseMessage(msg: string) {
         else if (msg.includes("[CHAT]") && !msg.includes("[CHAT] <server>")) {
             // Send incoming chat from the server to the Discord channel
             if (msg.includes("[gps=") && msg.includes(",") && msg.includes("]")) {
+                if (!config.sendGPSMessages)
+                    return;
+
                 newMsg = newMsg.replaceAll("gps=", "Location: ");
             }
             if (msg.includes("[train-stop=") && msg.includes(",") && msg.includes("]")) {

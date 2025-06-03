@@ -5,6 +5,7 @@
     "cleanMessages": false,
     "adminsCanRunCommands": false,
     "sendServerMessages": false,
+    "sendGPSMessages": false,
 
     "logLines": false,
 
